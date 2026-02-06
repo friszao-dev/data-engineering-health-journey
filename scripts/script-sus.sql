@@ -1,7 +1,6 @@
-/* ===========================================================
-   NÍVEL 1: FILTROS E BUSCAS BÁSICAS (WHERE / LIKE)
-   ===========================================================
-*/
+-- ==========================================================
+-- NÍVEL 1: FILTROS E BUSCAS BÁSICAS (WHERE / LIKE)
+-- ==========================================================
 
 -- 1. Ver apenas hospitais de um estado específico (SP)
 select uf, nome_estabelecimento from leitos
@@ -20,10 +19,9 @@ select nome_estabelecimento, uti_pediatrico_sus, uf from leitos
 where uf = 'RJ' and uti_pediatrico_sus > 5;
 
 
-/* ===========================================================
-   NÍVEL 2: AGREGAÇÕES E ESTATÍSTICAS (SUM / COUNT / AVG)
-   ===========================================================
-*/
+-- ==========================================================
+-- NÍVEL 2: AGREGAÇÕES E ESTATÍSTICAS (SUM / COUNT / AVG)
+-- ==========================================================
 
 -- 5. Soma total nacional: O volume total de leitos no Brasil
 select SUM(leitos_existentes) as total_brasil from leitos;
@@ -46,10 +44,9 @@ from leitos
 group by uf;
 
 
-/* ===========================================================
-   NÍVEL 3: FILTROS DE GRUPO E MÉTRICAS COMPLEXAS (HAVING / MATH)
-   ===========================================================
-*/
+-- ==============================================================
+-- NÍVEL 3: FILTROS DE GRUPO E MÉTRICAS COMPLEXAS (HAVING / MATH)
+-- ==============================================================
 
 -- 9. Filtro após agregação (HAVING): Estados com mais de 100.000 leitos no total
 select uf, sum(leitos_existentes) as total
@@ -90,3 +87,26 @@ from leitos
 group by uf
 having count(*) > 1000
 order by total_estabelecimentos desc;
+
+-- ==========================================================
+-- NÍVEL 4: CTE (COMMON TABLE EXPRESSIONS)
+-- ==========================================================
+
+-- 14. Ranking dos 3 maiores hospitais por número de UTIs em cada UF
+WITH ranking_uti AS (
+    SELECT 
+        uf, 
+        nome_estabelecimento, 
+        uti_total_exist,
+        ROW_NUMBER() OVER(PARTITION BY uf ORDER BY uti_total_exist DESC) as posicao
+    FROM public.leitos
+    WHERE uti_total_exist > 0 -- Apenas quem tem UTI
+)
+SELECT 
+    uf, 
+    nome_estabelecimento, 
+    uti_total_exist,
+    posicao
+FROM ranking_uti
+WHERE posicao <= 3 -- Filtra apenas o Top 3 de cada estado
+ORDER BY uf, posicao;
