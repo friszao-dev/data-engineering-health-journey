@@ -40,3 +40,7 @@ docker run --name postgres-saude `
 
 3. Qualidade de Dados:
 - Uso de técnicas de agrupamento (GROUP BY) para saneamento de registros duplicados e identificação de inconsistências em colunas de capacidade hospitalar.
+
+4. Troubleshooting de Tipagem (Data Mapping):
+- Identificação e correção do erro de importação [22P02], onde colunas de texto foram interpretadas como tipo `tid`.
+- Solução aplicada via mapeamento manual no assistente de importação e padronização para o tipo `TEXT/VARCHAR`.
