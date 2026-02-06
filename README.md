@@ -116,6 +116,13 @@ docker run --name postgres-saude `
 
 ---
 
+## Próximos Passos
+
+- Automação da ingestão de dados via Python (Pandas + SQLAlchemy)
+- Substituição da carga manual via DBeaver por scripts de ETL
+- Estruturação de pipeline inicial com foco em confiabilidade e reprodutibilidade
+
+
 ## Licença
 
 Este projeto está sob a licença **MIT License**. Consulte o arquivo `LICENSE` para mais detalhes.
