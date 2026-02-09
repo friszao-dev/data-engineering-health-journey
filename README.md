@@ -1,128 +1,68 @@
-# Data Engineering Health Journey - Análise DATASUS
+Data Engineering Health Journey - Pipeline DATASUS
 
-![GitHub repo size](https://img.shields.io/github/repo-size/friszao-dev/data-engineering-health-journey)
-![GitHub last commit](https://img.shields.io/github/last-commit/friszao-dev/data-engineering-health-journey)
-![GitHub issues](https://img.shields.io/github/issues/friszao-dev/data-engineering-health-journey)
+Este repositório documenta a construção de um ecossistema de dados focado no setor de saúde pública brasileiro. O objetivo é transformar dados brutos do DATASUS (Leitos Hospitalares) em informação estratégica através de um pipeline moderno de engenharia de dados.
+- Arquitetura e Estratégia
 
-Este repositório documenta a primeira fase da minha jornada de transição de carreira para **Engenharia de Dados**.  
-O projeto foca na estruturação, tratamento e análise de dados públicos de saúde do Brasil (leitos hospitalares), utilizando tecnologias fundamentais do ecossistema moderno de dados.
+O projeto adota a filosofia ELT (Extract, Load, Transform), priorizando a ingestão bruta (RAW) para garantir a integridade dos dados antes da modelagem analítica.
+Estrutura do Repositório
 
----
+A organização segue padrões de projetos reais de engenharia de software:
 
-## 📑 Sumário
-- [Tecnologias e Ferramentas](#tecnologias-e-ferramentas)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Etapas do Projeto](#etapas-do-projeto)
-  - [1. Configuração do Ambiente (Docker)](#1-configuração-do-ambiente-docker)
-  - [2. Aprendizados Técnicos](#2-aprendizados-técnicos)
-  - [3. Rotina de Refatoração e Resiliência](#3-rotina-de-refatoração-e-resiliência)
-- [Como Executar](#como-executar)
-- [Licença](#licença)
+.
+├── infra/            # Infraestrutura como Código (Docker Compose) [cite: 6, 16]
+├── src/              # Código fonte do pipeline [cite: 7]
+│   ├── ingestion/    # Scripts Python para carga bruta (RAW) [cite: 8, 17]
+│   ├── dbt_project/  # Transformação e Star Schema (Futuro) [cite: 9, 30]
+│   └── dashboard/    # Visualização de dados (Futuro) [cite: 10, 37]
+├── docs/             # Regras de negócio e documentação técnica [cite: 11]
+└── README.md         # Documentação principal [cite: 12]
 
----
+- Tecnologias e Infraestrutura
 
-## Tecnologias e Ferramentas
-- **Banco de Dados:** PostgreSQL (Relacional)  
-- **Infraestrutura:** Docker & Docker Desktop  
-- **IDE de Dados:** DBeaver  
-- **Controle de Versão:** Git & GitHub  
+    Banco de Dados: PostgreSQL 17 (Otimizado para persistência de grandes volumes).
 
----
+    Interface de Dados: pgAdmin 4 (Administração e execução de queries SQL).
 
-## Estrutura do Projeto
+    Orquestração de Infra: Docker Compose (Isolamento de serviços e redes internas).
 
-```
-📂 data-engineering-health-journey
-├── README.md
-├── scripts/           # Scripts SQL e Python
-├── docs/              # Documentação e notas técnicas
-├── data/              # Dados de entrada (se permitido)
-└── docker/            # Configurações de container e volumes
-```
+    Persistência: Volumes Docker configurados para garantir a sobrevivência dos dados ao ciclo de vida dos containers.
 
----
+- Como Executar o Ambiente
+1. Pré-requisitos
 
-## Etapas do Projeto
+    Docker Desktop instalado e rodando.
 
-### 1. Configuração do Ambiente (Docker)
-Isolamento do ambiente de banco de dados utilizando containers, garantindo persistência com **Volumes**.
+    Git para clonagem do repositório.
 
-> **Nota Técnica:** Devido à atualização para PostgreSQL 18+, ajustei o mapeamento do diretório principal (`/var/lib/postgresql`) para permitir que o sistema gerencie subpastas de versão e upgrades de forma nativa e segura.
+2. Subindo a Infraestrutura
 
-#### Comando para subir o container (PowerShell):
+Navegue até a pasta de infraestrutura e inicie os serviços:
+Bash
 
-```powershell
-docker run --name postgres-saude `
-  -e POSTGRES_PASSWORD=minhasenha123 `
-  -p 5432:5432 `
-  -v pgdata_saude:/var/lib/postgresql `
-  -d postgres
-```
+cd infra
+docker-compose up -d
 
----
+Este comando subirá automaticamente o banco de dados e a interface de gerenciamento.
+3. Acesso
 
-### 2. Aprendizados Técnicos
+    pgAdmin: http://localhost:8080 (Credenciais configuradas no docker-compose.yml).
 
-1. **Persistência e Infraestrutura**
-   - Implementação de Docker Volumes para desacoplar dados do ciclo de vida do container.
-   - Troubleshooting: Resolução de conflitos de montagem em versões recentes do PostgreSQL.
+    PostgreSQL: Disponível na porta 5432.
 
-2. **Manipulação de Dados (SQL)**
-   - Padronização de nomenclatura de objetos em `snake_case`.
-   - Diferenciação entre filtros de linha (`WHERE`) e filtros de agregação (`HAVING`).
-   - Uso de Window Functions (`ROW_NUMBER() OVER`) para criação de rankings.
-   - Implementação de CTEs (Common Table Expressions) para maior legibilidade e manutenção de queries complexas.
+- Roadmap de Desenvolvimento (Mês 1)
 
-3. **Qualidade de Dados & Troubleshooting**
-   - Correção de tipagem: resolução do erro de importação [22P02], onde colunas de texto foram interpretadas como tipo `int`.
-   - Saneamento de registros duplicados e identificação de inconsistências em colunas de capacidade.
+    Semanas 1-2 (Concluído): Estruturação do repositório e implementação da infraestrutura persistente via Docker Compose.
 
----
+    Semanas 3-4 (Em progresso): Desenvolvimento do script ingest_sus.py utilizando Python (Pandas + SQLAlchemy) para automação da carga bruta (Landing Zone).
 
-### 3. Rotina de Refatoração e Resiliência
+    Diário: Resolução de problemas de lógica SQL para garantir maestria na manipulação dos dados de saúde.
 
-Para garantir confiabilidade da infraestrutura e maestria técnica:
+- Decisões de Engenharia
 
-- **Reconstrução do Ambiente:** Exclusão e recriação de containers e volumes para validar idempotência.  
-- **Data Drill-down:** Repetição manual de queries complexas para consolidar lógica de negócio.  
-- **Validação de Conexões:** Reconfiguração do DBeaver do zero para dominar mapeamento de drivers e schemas.
+    Foco na Resiliência: A infraestrutura foi testada sob falha (simulação de docker-compose down e reinicialização de hardware) para validar o mapeamento de volumes físicos.
 
-Foco atual: Finalizando fundamentos de SQL e preparando automação com Python.
+    Abordagem de Carga RAW: Decidimos não normalizar dados durante a ingestão com Python para manter a rastreabilidade da origem (Single Source of Truth).
 
----
+Licença
 
-## Como Executar
-
-1. Clone o repositório:
-
-```bash
-git clone https://github.com/friszao-dev/data-engineering-health-journey.git
-cd data-engineering-health-journey
-```
-
-2. Suba o container Docker:
-
-```powershell
-docker run --name postgres-saude `
-  -e POSTGRES_PASSWORD=minhasenha123 `
-  -p 5432:5432 `
-  -v pgdata_saude:/var/lib/postgresql `
-  -d postgres
-```
-
-3. Conecte-se ao banco via **DBeaver** ou outro cliente SQL.  
-
-4. Execute scripts na pasta `scripts/` conforme necessário.
-
----
-
-## Próximos Passos
-
-- Automação da ingestão de dados via Python (Pandas + SQLAlchemy)
-- Substituição da carga manual via DBeaver por scripts de ETL
-- Estruturação de pipeline inicial com foco em confiabilidade e reprodutibilidade
-
-
-## Licença
-
-Este projeto está sob a licença **MIT License**. Consulte o arquivo `LICENSE` para mais detalhes.
+Este projeto está sob a licença MIT License.

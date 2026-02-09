@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  postgres-saude:
+    image: postgres:17
+    container_name: postgres-saude
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: minhasenha123
+      POSTGRES_DB: db_saude
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata_saude:/var/lib/postgresql/data
+    networks:
+      - rede-saude
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-saude
+    environment:
+      PGADMIN_DEFAULT_EMAIL: fidelis@email.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres-saude
+    networks:
+      - rede-saude
+
+networks:
+  rede-saude:
+    driver: bridge
+
+volumes:
+  pgdata_saude:
