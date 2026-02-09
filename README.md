@@ -1,68 +1,81 @@
-Data Engineering Health Journey - Pipeline DATASUS
+# Data Engineering Health Journey - Pipeline DATASUS
 
-Este repositório documenta a construção de um ecossistema de dados focado no setor de saúde pública brasileiro. O objetivo é transformar dados brutos do DATASUS (Leitos Hospitalares) em informação estratégica através de um pipeline moderno de engenharia de dados.
-- Arquitetura e Estratégia
+Este repositório documenta a construção de um ecossistema de dados focado no setor de saúde pública brasileiro. O objetivo é transformar dados brutos do DATASUS em informação estratégica através de um pipeline moderno de engenharia de dados.
+
+## Arquitetura e Estratégia
 
 O projeto adota a filosofia ELT (Extract, Load, Transform), priorizando a ingestão bruta (RAW) para garantir a integridade dos dados antes da modelagem analítica.
-Estrutura do Repositório
 
-A organização segue padrões de projetos reais de engenharia de software:
+## Estrutura do Repositório
 
+A organização segue padrões de projetos reais de engenharia de dados:
+
+```text
 .
-├── infra/            # Infraestrutura como Código (Docker Compose) [cite: 6, 16]
-├── src/              # Código fonte do pipeline [cite: 7]
-│   ├── ingestion/    # Scripts Python para carga bruta (RAW) [cite: 8, 17]
-│   ├── dbt_project/  # Transformação e Star Schema (Futuro) [cite: 9, 30]
-│   └── dashboard/    # Visualização de dados (Futuro) [cite: 10, 37]
-├── docs/             # Regras de negócio e documentação técnica [cite: 11]
-└── README.md         # Documentação principal [cite: 12]
+├── infra/            # Infraestrutura como Código (Docker Compose)
+├── src/              # Código fonte do pipeline
+│   ├── ingestion/    # Scripts Python para carga bruta (RAW)
+│   ├── dbt_project/  # Transformação e Star Schema (Futuro)
+│   └── dashboard/    # Visualização de dados (Futuro)
+├── docs/             # Regras de negócio e documentação técnica
+└── README.md         # Documentação principal
+```
 
-- Tecnologias e Infraestrutura
 
-    Banco de Dados: PostgreSQL 17 (Otimizado para persistência de grandes volumes).
+## Tecnologias e Infraestrutura
 
-    Interface de Dados: pgAdmin 4 (Administração e execução de queries SQL).
+- Banco de Dados: PostgreSQL 17
+- Interface de Dados: pgAdmin 4
+- Orquestração de Infraestrutura: Docker Compose
+- Persistência: Volumes Docker para garantir a sobrevivência dos dados ao ciclo de vida dos containers
+- Controle de Versão: Git e GitHub
 
-    Orquestração de Infra: Docker Compose (Isolamento de serviços e redes internas).
+## Como Executar o Ambiente
 
-    Persistência: Volumes Docker configurados para garantir a sobrevivência dos dados ao ciclo de vida dos containers.
+### Pré-requisitos
 
-- Como Executar o Ambiente
-1. Pré-requisitos
+- Docker Desktop instalado e rodando
+- Git para clonagem do repositório
 
-    Docker Desktop instalado e rodando.
+### Subindo a Infraestrutura
 
-    Git para clonagem do repositório.
-
-2. Subindo a Infraestrutura
-
-Navegue até a pasta de infraestrutura e inicie os serviços:
-Bash
-
+```bash
 cd infra
 docker-compose up -d
+```
 
-Este comando subirá automaticamente o banco de dados e a interface de gerenciamento.
-3. Acesso
+### Acesso aos Serviços
 
-    pgAdmin: http://localhost:8080 (Credenciais configuradas no docker-compose.yml).
+- pgAdmin: http://localhost:8080
+- PostgreSQL: Disponível na porta 5432
 
-    PostgreSQL: Disponível na porta 5432.
+## Roadmap de Desenvolvimento (Módulo 1)
 
-- Roadmap de Desenvolvimento (Mês 1)
+- Etapas 1-2 (Concluído):
+  - Estruturação do repositório
+  - Implementação da infraestrutura persistente com Docker Compose
 
-    Semanas 1-2 (Concluído): Estruturação do repositório e implementação da infraestrutura persistente via Docker Compose.
+- Etapas 3-4 (Em progresso):
+  - Desenvolvimento do script ingest_sus.py utilizando Python (Pandas + SQLAlchemy)
+  - Automação da carga bruta dos dados do DATASUS (Landing Zone)
 
-    Semanas 3-4 (Em progresso): Desenvolvimento do script ingest_sus.py utilizando Python (Pandas + SQLAlchemy) para automação da carga bruta (Landing Zone).
+- Prática contínua:
+  - Resolução diária de problemas de lógica SQL para garantir maestria na manipulação dos dados de saúde
 
-    Diário: Resolução de problemas de lógica SQL para garantir maestria na manipulação dos dados de saúde.
+## Decisões de Engenharia
 
-- Decisões de Engenharia
+- Foco em Resiliência:
+  A infraestrutura foi testada sob simulação de falha, utilizando docker-compose down, exclusão de conexões, reinicialização de hardware durante montagem de queries, para validar o mapeamento de volumes físicos e o perfeito funcionamento. 
 
-    Foco na Resiliência: A infraestrutura foi testada sob falha (simulação de docker-compose down e reinicialização de hardware) para validar o mapeamento de volumes físicos.
+- Abordagem de Carga RAW:
+  Dados não são normalizados durante a ingestão para manter rastreabilidade.
 
-    Abordagem de Carga RAW: Decidimos não normalizar dados durante a ingestão com Python para manter a rastreabilidade da origem (Single Source of Truth).
+## Próximos Passos
 
-Licença
+- Finalizar automação da ingestão
+- Iniciar modelagem com dbt
+- Evoluir pipeline com foco em qualidade
+
+## Licença
 
 Este projeto está sob a licença MIT License.
