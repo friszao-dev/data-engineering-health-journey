@@ -1,0 +1,18 @@
+# Python (Arquivos temporários e compilados)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ambiente Virtual (Onde ficam as bibliotecas instaladas)
+.venv/
+venv/
+env/
+
+# Configurações locais e Senhas (Segurança)
+.env
+.idea/
+.vscode/
+
+# Logs e Docker
+*.log
+.docker/
