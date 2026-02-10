@@ -51,13 +51,19 @@ docker-compose up -d
 
 ## Roadmap de Desenvolvimento (Módulo 1)
 
-- Etapas 1-2 (Concluído):
-  - Estruturação do repositório
-  - Implementação da infraestrutura persistente com Docker Compose
+- **Fase 1: Infraestrutura e Ambiente (Concluído)** 
+  - Estruturação profissional do repositório.
+  - Implementação da infraestrutura persistente com Docker Compose.
+  - Configuração de ambiente virtual isolado (`.venv`) para desenvolvimento Python.
 
-- Etapas 3-4 (Em progresso):
-  - Desenvolvimento do script ingest_sus.py utilizando Python (Pandas + SQLAlchemy)
-  - Automação da carga bruta dos dados do DATASUS (Landing Zone)
+- **Fase 2: Ingestão e Validação RAW (Concluído)** 
+  - Desenvolvimento do script `ingest_sus.py` utilizando **Python (Pandas + SQLAlchemy)**.
+  - Processamento e carga de **86.147 registros** de leitos hospitalares (CSV) para o PostgreSQL.
+  - Implementação de tratamento de strings, padronização de colunas e gestão de nulos com `COALESCE`.
+  - Criação de scripts de análise exploratória (`queries_exploratorias.sql`) para validação de métricas de saúde.
+
+- **Fase 3: Qualidade e CI/CD (Em progresso)** ⏳
+  - Configuração de Linters (SQLFluff) e automação via GitHub Actions.
 
 - Prática contínua:
   - Resolução diária de problemas de lógica SQL para garantir maestria na manipulação dos dados de saúde

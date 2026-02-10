@@ -16,3 +16,4 @@ env/
 # Logs e Docker
 *.log
 .docker/
+data/raw/*.csv
