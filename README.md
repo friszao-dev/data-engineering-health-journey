@@ -8,7 +8,7 @@ O projeto adota a filosofia ELT (Extract, Load, Transform), priorizando a ingest
 
 ## Fluxo de Dados:
 
-[CSV Raw] ➔ [Python Ingestion] ➔ [PostgreSQL (Camada Bronze)] ➔ [SQL Validation].
+[CSV Raw] ➔ [Python + Logging] ➔ [.env Secrets] ➔ [PostgreSQL (Bronze)] ➔ [Analytic CTEs].
 
 ## Estrutura do Repositório
 
@@ -31,6 +31,7 @@ A organização segue padrões de projetos reais de engenharia de dados:
 
 ## Tecnologias e Infraestrutura
 
+- Python Libraries: Pandas, SQLAlchemy, python-dotenv, logging
 - Banco de Dados: PostgreSQL 17
 - Interface de Dados: pgAdmin 4
 - Orquestração de Infraestrutura: Docker Compose
@@ -38,6 +39,11 @@ A organização segue padrões de projetos reais de engenharia de dados:
 - Controle de Versão: Git e GitHub
 
 ## Como Executar o Ambiente
+
+### Configuração de Variáveis de Ambiente
+O projeto utiliza um arquivo `.env` para gestão de credenciais sensíveis. 
+1. Renomeie o arquivo `infra/.env.example` para `infra/.env`.
+2. Ajuste as credenciais conforme necessário.
 
 ### Pré-requisitos
 
@@ -67,7 +73,7 @@ SELECT count(*) FROM raw_leitos;
 ## Roadmap de Desenvolvimento (Módulo 1)
 
 - **Fase 1: Infraestrutura e Ambiente (Concluído)** 
-  - Estruturação profissional do repositório.
+  - Estruturação do repositório.
   - Implementação da infraestrutura persistente com Docker Compose.
   - Configuração de ambiente virtual isolado (`.venv`) para desenvolvimento Python.
 
@@ -76,6 +82,7 @@ SELECT count(*) FROM raw_leitos;
   - Processamento e carga de **86.147 registros** de leitos hospitalares (CSV) para o PostgreSQL.
   - Implementação de tratamento de strings, padronização de colunas e gestão de nulos com `COALESCE`.
   - Criação de scripts de análise exploratória (`queries_exploratorias.sql`) para validação de métricas de saúde.
+  - Implementação de Logging Persistente para rastreabilidade de falhas no pipeline.
 
 - **Fase 3: Qualidade e CI/CD (Em progresso)** ⏳
   - Configuração de Linters (SQLFluff) e automação via GitHub Actions.
