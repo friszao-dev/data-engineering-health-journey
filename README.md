@@ -6,19 +6,26 @@ Este repositório documenta a construção de um ecossistema de dados focado no 
 
 O projeto adota a filosofia ELT (Extract, Load, Transform), priorizando a ingestão bruta (RAW) para garantir a integridade dos dados antes da modelagem analítica.
 
+## Fluxo de Dados:
+
+[CSV Raw] ➔ [Python Ingestion] ➔ [PostgreSQL (Camada Bronze)] ➔ [SQL Validation].
+
 ## Estrutura do Repositório
 
 A organização segue padrões de projetos reais de engenharia de dados:
 
 ```text
 .
-├── infra/            # Infraestrutura como Código (Docker Compose)
-├── src/              # Código fonte do pipeline
-│   ├── ingestion/    # Scripts Python para carga bruta (RAW)
-│   ├── dbt_project/  # Transformação e Star Schema (Futuro)
-│   └── dashboard/    # Visualização de dados (Futuro)
-├── docs/             # Regras de negócio e documentação técnica
-└── README.md         # Documentação principal
+├── data/
+│   └── raw/
+├── infra/
+├── src/
+│   ├── ingestion/     # RAW layer
+│   ├── transformation/ # STAGING / MART (dbt)
+│   └── analytics/     # Dashboard
+├── docs/
+└── README.md
+
 ```
 
 
@@ -48,6 +55,14 @@ docker-compose up -d
 
 - pgAdmin: http://localhost:8080
 - PostgreSQL: Disponível na porta 5432
+
+### Como Validar a Ingestão
+Após rodar o script de ingestão, você pode validar o sucesso executando a query abaixo no pgAdmin ou DBeaver:
+
+```sql
+SELECT count(*) FROM raw_leitos;
+-- Resultado esperado: 86.147 registros.
+```
 
 ## Roadmap de Desenvolvimento (Módulo 1)
 

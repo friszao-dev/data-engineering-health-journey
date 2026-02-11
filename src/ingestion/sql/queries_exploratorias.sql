@@ -28,6 +28,16 @@ FROM raw_leitos
 GROUP BY uf, municipio
 ORDER BY percentual_sus DESC;
 
+-- Percentual de Leitos SUS utilizando WITH
+WITH totais AS (SELECT
+SUM(leitos_existentes) AS total_leitos,
+SUM(leitos_sus) AS total_leitos_sus
+FROM raw_leitos)
+
+select total_leitos, total_leitos_sus,
+ROUND(total_leitos_sus * 100.0 / NULLIF(total_leitos, 0), 2) AS percentual_sus
+FROM totais;
+
 
 -- 3. Identificação de Cidades com Leitos de UTI (Filtro Crítico)
 

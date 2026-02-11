@@ -2,18 +2,41 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
+
+# Distribuição / build
+build/
+dist/
+*.egg-info/
 
 # Ambiente Virtual (Onde ficam as bibliotecas instaladas)
 .venv/
 venv/
 env/
+ENV/
 
-# Configurações locais e Senhas (Segurança)
+# Variáveis de Ambiente / Secrets
 .env
+.env.*
+*.env
+
+# IDEs / Editores
 .idea/
 .vscode/
+*.swp
+*.swo
 
 # Logs e Docker
 *.log
+logs/
 .docker/
-data/raw/*.csv
+docker-compose.override.yml
+
+# Dados
+data/interim/
+data/processed/
+data/raw/
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
